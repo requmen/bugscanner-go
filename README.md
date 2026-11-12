@@ -68,7 +68,7 @@ The target is expected to return HTTP status `101` for a successful WebSocket up
 bugscanner-go scan sni -f example.com.lst --threads 16 --timeout 8 --deep 3
 ```
 
-The current SNI implementation connects to the built-in endpoint `93.184.216.34:443`; it does not accept a `--target` flag.
+The current SNI implementation connects to the built-in endpoint `1.1.1.1:443`; it does not accept a `--target` flag.
 
 ## License
 
