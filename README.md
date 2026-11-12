@@ -60,7 +60,9 @@ Visit subfinder repo if you want to install subfinder [here](https://github.com/
 
 #### Scan Server Name Indication
 
-	bugscanner-go scan sni -f example.com.lst --threads 16 --timeout 8 --deep 3
+	bugscanner-go scan sni -f example.com.lst --target 203.0.113.10:443 --threads 16 --timeout 8 --deep 3
+
+* Replace `203.0.113.10:443` with the host and port of a server you own or are authorized to test. Every SNI name in the file is sent to this same target.
 
 #### Note
 
