@@ -9,10 +9,11 @@ import (
 	"net"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
-	"github.com/aztecrabbit/bugscanner-go/pkg/queuescanner"
+	"github.com/requmen/bugscanner-go/pkg/queuescanner"
 	"github.com/spf13/cobra"
 )
 
@@ -112,7 +113,7 @@ func scanCdnSsl(c *queuescanner.Ctx, p *queuescanner.QueueScannerScanParams) {
 	var conn net.Conn
 	var err error
 
-	proxyHostPort := fmt.Sprintf("%s:%d", req.ProxyHost, req.ProxyPort)
+	proxyHostPort := net.JoinHostPort(req.ProxyHost, strconv.Itoa(req.ProxyPort))
 	dialCount := 0
 
 	for {

@@ -1,2 +1,5 @@
+.PHONY: build
+
 build:
-	go build -x -o ./builds/bugscanner-go .
+	mkdir -p builds
+	go build -o ./builds/bugscanner-go .

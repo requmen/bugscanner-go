@@ -1,69 +1,75 @@
 # Bugscanner Go
 
-This tool is dedicated to [DARKTUNNEL.NET](https://www.darktunnel.net), please support us if you find this tool useful.
+A command-line tool for testing CDN, proxy, and TLS/SNI behavior. The original project is dedicated to [DARKTUNNEL.NET](https://www.darktunnel.net) and its Telegram community: [@darktunnel_group](https://t.me/darktunnel_group).
 
-Join to our telegram group @darktunnel_group or click [here](https://t.me/darktunnel_group).
+This repository is published at [github.com/requmen/bugscanner-go](https://github.com/requmen/bugscanner-go). The project originates from [github.com/aztecrabbit/bugscanner-go](https://github.com/aztecrabbit/bugscanner-go); the original MIT license and copyright notice are retained.
 
+## Requirements
 
-Install
--------
+- Go 1.21 or newer
+- Optional: [Subfinder](https://github.com/projectdiscovery/subfinder) or another tool for preparing a domain list
 
-**Latest Release**
+## Install
 
-	go install -v github.com/aztecrabbit/bugscanner-go@latest
+Install the latest version from this repository:
 
-**Latest Commit**
+```sh
+go install -v github.com/requmen/bugscanner-go@latest
+```
 
-	go install -v github.com/aztecrabbit/bugscanner-go@HEAD
+To install the latest commit instead:
 
+```sh
+go install -v github.com/requmen/bugscanner-go@HEAD
+```
 
-#### Add go bin to PATH
+Make sure `$(go env GOPATH)/bin` is on your `PATH`. For a default Go setup, add it in Bash or Zsh with:
 
-**Bash**
+```sh
+echo 'export PATH="$PATH:$(go env GOPATH)/bin"' >> ~/.profile
+```
 
-	echo 'PATH="$PATH:$HOME/go/bin"' >> $HOME/.bashrc && source $HOME/.bashrc
+Open a new shell, then check the available commands:
 
-**Zsh**
+```sh
+bugscanner-go --help
+bugscanner-go scan --help
+```
 
-	echo 'PATH="$PATH:$HOME/go/bin"' >> $HOME/.zshrc && source $HOME/.zshrc
+## Prepare a domain list
 
+For example, use Subfinder to discover subdomains and save them to a file:
 
-Usage
------
+```sh
+subfinder -d example.com -o example.com.lst
+```
 
-	bugscanner-go --help
+Only scan domains and systems that you own or are authorized to test.
 
+## Examples
 
-### Before Scanning
+### Direct scan
 
-**1. Install subfinder (or any tool for finding subdomain)**
+```sh
+bugscanner-go scan direct -f example.com.lst -o cf.lst
+```
 
-Visit subfinder repo if you want to install subfinder [here](https://github.com/projectdiscovery/subfinder#installation)
+### CDN SSL scan
 
+```sh
+bugscanner-go scan cdn-ssl --proxy-filename cf.lst --target ws.example.com
+```
 
-**2. Scan subdomain using subfinder and save it to file**
+The target is expected to return HTTP status `101` for a successful WebSocket upgrade.
 
-	subfinder -d example.com -o example.com.lst
+### SNI scan
 
+```sh
+bugscanner-go scan sni -f example.com.lst --threads 16 --timeout 8 --deep 3
+```
 
-### Scanning
+The current SNI implementation connects to the built-in endpoint `93.184.216.34:443`; it does not accept a `--target` flag.
 
-#### Scan Direct
+## License
 
-	bugscanner-go scan direct -f example.com.lst -o cf.lst
-
-#### Scan CDN SSL
-
-	bugscanner-go scan cdn-ssl --proxy-filename cf.lst --target ws.example.com
-
-* target server response must be returning 101 status code.
-
-#### Scan Server Name Indication
-
-	bugscanner-go scan sni -f example.com.lst --target 203.0.113.10:443 --threads 16 --timeout 8 --deep 3
-
-* Replace `203.0.113.10:443` with the host and port of a server you own or are authorized to test. Every SNI name in the file is sent to this same target.
-
-#### Note
-
-* Another subcommand for scanning will be updated soon.
+MIT. See [LICENSE](LICENSE) for the original copyright and terms.

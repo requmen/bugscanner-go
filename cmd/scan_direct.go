@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aztecrabbit/bugscanner-go/pkg/queuescanner"
 	"github.com/fatih/color"
+	"github.com/requmen/bugscanner-go/pkg/queuescanner"
 	"github.com/spf13/cobra"
 )
 
