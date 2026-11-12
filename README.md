@@ -23,10 +23,10 @@ To install the latest commit instead:
 go install -v github.com/requmen/bugscanner-go@HEAD
 ```
 
-Make sure `$(go env GOPATH)/bin` is on your `PATH`. For a default Go setup, add it in Bash or Zsh with:
+Add Go's bin directory to your Bash `PATH` with:
 
 ```sh
-echo 'export PATH="$PATH:$(go env GOPATH)/bin"' >> ~/.profile
+echo 'PATH="$PATH:$HOME/go/bin"' >> $HOME/.bashrc && source $HOME/.bashrc
 ```
 
 Open a new shell, then check the available commands:
