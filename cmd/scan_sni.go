@@ -25,7 +25,6 @@ var (
 	sniFlagFilename string
 	sniFlagDeep     int
 	sniFlagTimeout  int
-	sniFlagTarget   string
 )
 
 func init() {
@@ -34,11 +33,9 @@ func init() {
 	sniCmd.Flags().StringVarP(&sniFlagFilename, "filename", "f", "", "domain list filename")
 	sniCmd.Flags().IntVarP(&sniFlagDeep, "deep", "d", 0, "deep subdomain")
 	sniCmd.Flags().IntVar(&sniFlagTimeout, "timeout", 3, "handshake timeout")
-	sniCmd.Flags().StringVar(&sniFlagTarget, "target", "", "authorized server address in host:port form")
 
 	sniCmd.MarkFlagFilename("filename")
 	sniCmd.MarkFlagRequired("filename")
-	sniCmd.MarkFlagRequired("target")
 }
 
 func scanSNI(c *queuescanner.Ctx, p *queuescanner.QueueScannerScanParams) {
@@ -55,7 +52,7 @@ func scanSNI(c *queuescanner.Ctx, p *queuescanner.QueueScannerScanParams) {
 		if dialCount > 3 {
 			return
 		}
-		conn, err = net.DialTimeout("tcp", sniFlagTarget, 3*time.Second)
+		conn, err = net.DialTimeout("tcp", "93.184.216.34:443", 3*time.Second)
 		if err != nil {
 			if e, ok := err.(net.Error); ok && e.Timeout() {
 				c.LogReplace(p.Name, "-", "Dial Timeout")
@@ -87,10 +84,6 @@ func scanSNI(c *queuescanner.Ctx, p *queuescanner.QueueScannerScanParams) {
 }
 
 func runScanSNI(cmd *cobra.Command, args []string) {
-	if _, _, err := net.SplitHostPort(sniFlagTarget); err != nil {
-		cobra.CheckErr(fmt.Errorf("invalid --target %q (expected host:port): %w", sniFlagTarget, err))
-	}
-
 	domainListFile, err := os.Open(sniFlagFilename)
 	if err != nil {
 		fmt.Println(err.Error())
